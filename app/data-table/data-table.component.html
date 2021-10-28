@@ -1,0 +1,59 @@
+<mat-table #table [dataSource]="dataSource" matSort>
+
+  <!-- Columns definition -->
+  <ng-container matColumnDef="trigger">
+    <mat-header-cell *matHeaderCellDef fxFlex="60px">
+      <button mat-icon-button>
+        <mat-icon>menu</mat-icon>
+      </button>
+    </mat-header-cell>
+
+    <mat-cell *matCellDef="let row; let i = index" fxFlex="60px">
+      <button mat-icon-button (click)="expandedElement[i] = !expandedElement[i]; $event.stopPropagation()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container [matColumnDef]="column.id" *ngFor="let column of visibleColumns">
+    <!-- Header cell -->
+    <mat-header-cell *matHeaderCellDef [fxFlex]="column.width + 'px'" mat-sort-header>{{ column.label }}</mat-header-cell>
+
+    <!-- Body cell -->
+    <mat-cell *matCellDef="let row" [fxFlex]="column.width + 'px'">
+      <!-- Default -->
+      <ng-container *ngIf="!getTemplateRef(column.id); else customCell">{{ row[column.id] }}</ng-container>
+
+      <!-- Custom -->
+      <ng-template #customCell [ngTemplateOutlet]="getTemplateRef(column.id)" [ngOutletContext]="{ row: row }"></ng-template>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="hidden">
+    <mat-cell *matCellDef="let row">
+      <p *ngFor="let hiddenColumn of hiddenColumns">
+        <strong>
+          {{ hiddenColumn.label }}: 
+        </strong>
+        <span>
+          {{ row.element[hiddenColumn.id] }}
+        </span>
+      </p>
+    </mat-cell>
+  </ng-container>
+
+  <!-- Header row definition for visible columns -->
+  <mat-header-row *matHeaderRowDef="visibleColumnsIds"></mat-header-row>
+
+  <!-- Body row definition for visible columns -->
+  <mat-row 
+    *matRowDef="let row; columns: visibleColumnsIds">
+  </mat-row>
+
+  <!-- Body row definition for hidden columns -->
+  <mat-row
+    *matRowDef="let row; let i = index; columns: ['hidden']; when: isExpansionDetailRow" 
+    [@detailExpand]="hiddenColumns.length && expandedElement[i - 1] ? 'expanded' : 'collapsed'"
+    style="overflow: hidden">
+  </mat-row>
+</mat-table>

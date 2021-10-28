@@ -1,0 +1,27 @@
+<mat-toolbar color="primary"> Angular Material 2 App </mat-toolbar>
+<main fxLayout fxLayoutWrap style="padding: 16px">
+  <mat-card fxFlex="0 1 calc(100% - 32px)" style="margin: 16px">
+    <mat-card-content>
+      <!-- Data table public api -->
+      <data-table
+        [dataSource]="data"
+        [columns]="columns"
+        (rowClick)="click($event)"
+      >
+        <button
+          *qtColumnDef="'action'"
+          mat-icon-button
+          (click)="$event.stopPropagation()"
+        >
+          <mat-icon>more</mat-icon>
+        </button>
+      </data-table>
+    </mat-card-content>
+  </mat-card>
+</main>
+<!--
+Copyright Google LLC All Rights Reserved.
+
+Use of this source code is governed by an MIT-style license that can be
+found in the LICENSE file at https://angular.io/license
+-->
